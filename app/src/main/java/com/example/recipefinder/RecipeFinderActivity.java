@@ -93,8 +93,14 @@ public class RecipeFinderActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     // Pass ingredients to a new Activity or Fragment
-                    List<ExtendedIngredient> ingredients = response.body().getExtendedIngredients();
-                    openIngredientsActivity(ingredients);
+                    Recipe recipe = response.body();
+                    String recipeTitle = recipe.getTitle(); // Get title
+                    String recipeImageUrl = recipe.getImageUrl(); // Get image URL
+                    List<ExtendedIngredient> ingredients = recipe.getExtendedIngredients(); // Get ingredients
+
+                    // Pass data to the IngredientsActivity
+                    openIngredientsActivity(ingredients, recipeTitle, recipeImageUrl);
+
                 } else {
                     Toast.makeText(RecipeFinderActivity.this, "No ingredients found", Toast.LENGTH_SHORT).show();
                 }
@@ -108,9 +114,11 @@ public class RecipeFinderActivity extends AppCompatActivity {
         });
     }
 
-    private void openIngredientsActivity(List<ExtendedIngredient> ingredients) {
+    private void openIngredientsActivity(List<ExtendedIngredient> ingredients, String recipeTitle, String recipeImageUrl) {
         Intent intent = new Intent(this, IngredientsActivity.class);
         intent.putExtra("ingredients", new ArrayList<>(ingredients)); // Pass ingredients as a Parcelable or Serializable list
+        intent.putExtra("recipeTitle", recipeTitle); // Pass recipe title
+        intent.putExtra("recipeImageUrl", recipeImageUrl); // Pass recipe image URL
         startActivity(intent);
     }
 }
