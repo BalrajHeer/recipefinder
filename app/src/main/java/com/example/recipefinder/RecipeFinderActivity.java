@@ -21,7 +21,7 @@ import retrofit2.Response;
 
 public class RecipeFinderActivity extends AppCompatActivity {
     private EditText searchInput;
-    private Button searchButton;
+    private Button searchButton,showSavedRecipesButton; ;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
@@ -35,17 +35,23 @@ public class RecipeFinderActivity extends AppCompatActivity {
 
         searchInput = findViewById(R.id.searchInput);
         searchButton = findViewById(R.id.searchButton);
+        showSavedRecipesButton = findViewById(R.id.showSavedRecipesButton);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recipeAdapter = new RecipeAdapter();
+        recipeAdapter = new RecipeAdapter(this);
         recyclerView.setAdapter(recipeAdapter);
 
         // Set up the click listener for recipe images
         recipeAdapter.setOnRecipeImageClickListener(recipeId -> {
             // Fetch and handle recipe ingredients
             fetchRecipeIngredients(recipeId);
+        });
+        // Set up click listener for "Show Saved Recipes" button
+        showSavedRecipesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(RecipeFinderActivity.this, SavedRecipesActivity.class);
+            startActivity(intent); // Navigate to SavedRecipesActivity
         });
 
         searchButton.setOnClickListener(v -> searchRecipes());

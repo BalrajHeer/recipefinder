@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,12 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
     private List<Recipe> recipes = new ArrayList<>();
     private OnRecipeImageClickListener listener;
+    private Context context;
+
+    // Constructor
+    public RecipeAdapter(Context context) {
+        this.context = context;
+    }
 
     // Constructor or method to set the listener
     public void setOnRecipeImageClickListener(OnRecipeImageClickListener listener) {
@@ -50,6 +57,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 listener.onRecipeImageClick(recipeId);
             }
         });
+        // Save button click event
+
+
     }
 
 
@@ -57,6 +67,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public int getItemCount() {
         return recipes.size();
     }
+
+
 
     static class RecipeViewHolder extends RecyclerView.ViewHolder {
         TextView recipeTitle;

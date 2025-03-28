@@ -1,6 +1,9 @@
 package com.example.recipefinder;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +21,8 @@ public class IngredientsActivity extends AppCompatActivity {
     private IngredientsAdapter ingredientsAdapter;
     private ImageView recipeImage;
     private TextView recipeTitle;
+    private Button saveButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,8 @@ public class IngredientsActivity extends AppCompatActivity {
         recipeImage = findViewById(R.id.recipeImage);
         recipeTitle = findViewById(R.id.recipeTitle);
         recyclerView = findViewById(R.id.recyclerViewIngredients);
+        saveButton = findViewById(R.id.saveButton);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientsAdapter = new IngredientsAdapter();
         recyclerView.setAdapter(ingredientsAdapter);
@@ -63,8 +70,36 @@ public class IngredientsActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "No ingredients available for this recipe", Toast.LENGTH_SHORT).show();
             }
+            // Save recipe when save button is clicked
+
+            saveButton.setOnClickListener(v -> saveRecipe(title, imageUrl));
+
         } else {
             Toast.makeText(this, "Failed to load recipe details", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void saveRecipe(String title, String imageUrl) {
+        // Validate recipe data
+        if (title == null || title.isEmpty()) {
+            Toast.makeText(this, "Recipe title is missing. Cannot save recipe.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (imageUrl == null) {
+            imageUrl = ""; // Default value for missing image URL
+        }
+
+        // Save to SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Add the recipe (using a unique title as a key, for simplicity)
+        editor.putString(title, imageUrl);
+        editor.apply(); // Apply changes
+
+        // Display confirmation message
+        Toast.makeText(this, "Recipe saved successfully!", Toast.LENGTH_SHORT).show();
+    }
+
 }
