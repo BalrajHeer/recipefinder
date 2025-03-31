@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,21 +23,24 @@ import retrofit2.Response;
 
 public class RecipeFinderActivity extends AppCompatActivity {
     private EditText searchInput;
-    private Button searchButton,showSavedRecipesButton; ;
+    private Button searchButton,showSavedRecipesButton, logoutButton; ;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
 
     private static final String API_KEY = "826ebe345fcf4124ac1a7c40fe637ec9"; // Replace with your Spoonacular API Key
+    private String userId; // Firebase UID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_finder);
 
+        userId = getIntent().getStringExtra("userId"); // Get userId from Intent
         searchInput = findViewById(R.id.searchInput);
         searchButton = findViewById(R.id.searchButton);
         showSavedRecipesButton = findViewById(R.id.showSavedRecipesButton);
+        logoutButton = findViewById(R.id.logoutButton);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -44,7 +49,7 @@ public class RecipeFinderActivity extends AppCompatActivity {
         recyclerView.setAdapter(recipeAdapter);
 
 
-        // Set up the click listener for recipe images
+         //Set up the click listener for recipe images
         recipeAdapter.setOnRecipeImageClickListener(recipeId -> {
             // Fetch and handle recipe ingredients
             fetchRecipeIngredients(recipeId);
@@ -52,10 +57,23 @@ public class RecipeFinderActivity extends AppCompatActivity {
         // Set up click listener for "Show Saved Recipes" button
         showSavedRecipesButton.setOnClickListener(v -> {
             Intent intent = new Intent(RecipeFinderActivity.this, SavedRecipesActivity.class);
+            intent.putExtra("userId", userId); // Pass userId to SavedRecipesActivity
             startActivity(intent); // Navigate to SavedRecipesActivity
         });
 
+
         searchButton.setOnClickListener(v -> searchRecipes());
+        logoutButton.setOnClickListener(v -> logoutUser());
+    }
+
+    private void logoutUser() {
+        // Log out the current Firebase user
+        FirebaseAuth.getInstance().signOut();
+
+        // Navigate back to the login screen
+        Intent intent = new Intent(RecipeFinderActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish(); // Close RecipeFinderActivity to prevent returning to it
     }
 
 

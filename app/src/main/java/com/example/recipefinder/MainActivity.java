@@ -69,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                            // Automatically log in and navigate to RecipeFinderActivity
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                    navigateToRecipeFinderActivity(user.getUid());
+                            }
 
                         } else {
                             Toast.makeText(MainActivity.this, "Account creation failed", Toast.LENGTH_SHORT).show();
@@ -92,7 +97,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                            navigateToRecipeFinderActivity(); // Navigate on successful login
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                navigateToRecipeFinderActivity(user.getUid());
+                            }
+
                         } else {
                             Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                         }
@@ -100,9 +109,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void navigateToRecipeFinderActivity() {
-        Intent intent = new Intent(MainActivity.this, RecipeFinderActivity.class);
-        startActivity(intent);
-        finish(); // Prevent going back to login screen
+    private void navigateToRecipeFinderActivity(String userId) {
+        if (userId != null && !userId.isEmpty()) {
+            Intent intent = new Intent(MainActivity.this, RecipeFinderActivity.class);
+            intent.putExtra("userId", userId); // Pass userId to RecipeFinderActivity
+            startActivity(intent);
+            finish(); // Close MainActivity
+        } else {
+            Toast.makeText(this, "Failed to retrieve user ID. Login required.", Toast.LENGTH_SHORT).show();
+        }
     }
+
 }

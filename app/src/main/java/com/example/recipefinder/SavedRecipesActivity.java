@@ -25,18 +25,23 @@ public class SavedRecipesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_recipes);
 
+        String userId = getIntent().getStringExtra("userId"); // Get userId from Intent
         recyclerView = findViewById(R.id.recyclerViewSavedRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recipeAdapter = new RecipeAdapter(this);
         recyclerView.setAdapter(recipeAdapter);
 
         // Load saved recipes
-        List<Recipe> savedRecipes = loadSavedRecipes();
+        // Load saved recipes dynamically
+        List<Recipe> savedRecipes = loadSavedRecipes(userId);
         if (!savedRecipes.isEmpty()) {
             recipeAdapter.setRecipes(savedRecipes);
         } else {
             Toast.makeText(this, "No saved recipes found.", Toast.LENGTH_SHORT).show();
         }
+
+
+
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +54,8 @@ public class SavedRecipesActivity extends AppCompatActivity {
 
     }
 
-    private List<Recipe> loadSavedRecipes() {
-        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes", MODE_PRIVATE);
+    private List<Recipe> loadSavedRecipes(String userId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes_" + userId, MODE_PRIVATE);
         Map<String, ?> savedRecipesMap = sharedPreferences.getAll();
 
         List<Recipe> recipes = new ArrayList<>();
@@ -58,7 +63,6 @@ public class SavedRecipesActivity extends AppCompatActivity {
             String title = entry.getKey();
             String imageUrl = (String) entry.getValue();
 
-            // Create a Recipe object
             Recipe recipe = new Recipe();
             recipe.setTitle(title);
             recipe.setImageUrl(imageUrl);
@@ -66,5 +70,6 @@ public class SavedRecipesActivity extends AppCompatActivity {
             recipes.add(recipe);
         }
         return recipes;
+
     }
 }
