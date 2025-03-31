@@ -43,6 +43,7 @@ public class RecipeFinderActivity extends AppCompatActivity {
         recipeAdapter = new RecipeAdapter(this);
         recyclerView.setAdapter(recipeAdapter);
 
+
         // Set up the click listener for recipe images
         recipeAdapter.setOnRecipeImageClickListener(recipeId -> {
             // Fetch and handle recipe ingredients
@@ -56,6 +57,7 @@ public class RecipeFinderActivity extends AppCompatActivity {
 
         searchButton.setOnClickListener(v -> searchRecipes());
     }
+
 
     private void searchRecipes() {
         String query = searchInput.getText().toString().trim();

@@ -1,6 +1,7 @@
 package com.example.recipefinder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -34,6 +35,8 @@ public class IngredientsActivity extends AppCompatActivity {
         recipeTitle = findViewById(R.id.recipeTitle);
         recyclerView = findViewById(R.id.recyclerViewIngredients);
         saveButton = findViewById(R.id.saveButton);
+        Button backButton = findViewById(R.id.backButton);
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientsAdapter = new IngredientsAdapter();
@@ -73,6 +76,14 @@ public class IngredientsActivity extends AppCompatActivity {
             // Save recipe when save button is clicked
 
             saveButton.setOnClickListener(v -> saveRecipe(title, imageUrl));
+
+            backButton.setOnClickListener(v -> {
+                Intent intent = new Intent(IngredientsActivity.this, RecipeFinderActivity.class);
+                startActivity(intent);
+                finish();
+            });
+
+
 
         } else {
             Toast.makeText(this, "Failed to load recipe details", Toast.LENGTH_SHORT).show();

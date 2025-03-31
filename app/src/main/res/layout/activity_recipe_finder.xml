@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="24dp"
     android:background="@drawable/bg2"
     tools:context=".RecipeFinderActivity">
 
@@ -30,6 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Search"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="@id/searchInput"
         app:layout_constraintBottom_toBottomOf="@id/searchInput"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -62,6 +64,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Saved Recipes"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@id/recyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

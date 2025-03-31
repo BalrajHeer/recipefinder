@@ -18,4 +18,5 @@ public interface RecipeApiService {
             @Path("id") int recipeId,
             @Query("apiKey") String apiKey
     );
+
 }

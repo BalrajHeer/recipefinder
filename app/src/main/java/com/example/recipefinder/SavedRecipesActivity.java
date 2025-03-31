@@ -1,8 +1,12 @@
 package com.example.recipefinder;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +37,16 @@ public class SavedRecipesActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No saved recipes found.", Toast.LENGTH_SHORT).show();
         }
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SavedRecipesActivity.this, RecipeFinderActivity.class);
+                startActivity(intent);
+                finish(); // Close the current activity
+            }
+        });
+
     }
 
     private List<Recipe> loadSavedRecipes() {

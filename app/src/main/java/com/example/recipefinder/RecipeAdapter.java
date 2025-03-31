@@ -52,14 +52,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         // Handle click event for the image
         holder.recipeImage.setOnClickListener(v -> {
+            // Navigate to IngredientsActivity when image is clicked
+
             if (listener != null) {
+
                 int recipeId = recipe.getId();
                 listener.onRecipeImageClick(recipeId);
             }
         });
-        // Save button click event
-
-
     }
 
 
