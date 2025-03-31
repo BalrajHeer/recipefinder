@@ -30,8 +30,7 @@ public class IngredientsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingredients);
 
-        // Initialize UI elements
-        String userId = getIntent().getStringExtra("userId"); // Get userId passed from RecipeFinderActivity
+
         recipeImage = findViewById(R.id.recipeImage);
         recipeTitle = findViewById(R.id.recipeTitle);
         recyclerView = findViewById(R.id.recyclerViewIngredients);
@@ -76,7 +75,7 @@ public class IngredientsActivity extends AppCompatActivity {
             }
             // Save recipe when save button is clicked
 
-            saveButton.setOnClickListener(v -> saveRecipe(userId,title, imageUrl));
+            saveButton.setOnClickListener(v -> saveRecipe(title, imageUrl));
 
             backButton.setOnClickListener(v -> {
                 Intent intent = new Intent(IngredientsActivity.this, RecipeFinderActivity.class);
@@ -91,7 +90,7 @@ public class IngredientsActivity extends AppCompatActivity {
         }
     }
 
-    private void saveRecipe(String userId, String title, String imageUrl) {
+    private void saveRecipe(String title, String imageUrl) {
         // Validate recipe data
         if (title == null || title.isEmpty()) {
             Toast.makeText(this, "Recipe title is missing. Cannot save recipe.", Toast.LENGTH_SHORT).show();
@@ -103,15 +102,17 @@ public class IngredientsActivity extends AppCompatActivity {
         }
 
         // Save to user-specific SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes_" + userId, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Add the recipe (using a unique title as a key, for simplicity)
         editor.putString(title, imageUrl);
+        //editor.clear();
         editor.apply(); // Apply changes
 
         // Display confirmation message
         Toast.makeText(this, "Recipe saved successfully!", Toast.LENGTH_SHORT).show();
     }
+
 
 }

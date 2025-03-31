@@ -25,17 +25,23 @@ public class SavedRecipesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_recipes);
 
-        String userId = getIntent().getStringExtra("userId"); // Get userId from Intent
+        //String userId = getIntent().getStringExtra("userId"); // Get userId from Intent
         recyclerView = findViewById(R.id.recyclerViewSavedRecipes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recipeAdapter = new RecipeAdapter(this);
         recyclerView.setAdapter(recipeAdapter);
 
         // Load saved recipes
-        // Load saved recipes dynamically
-        List<Recipe> savedRecipes = loadSavedRecipes(userId);
+        List<Recipe> savedRecipes = loadSavedRecipes();
         if (!savedRecipes.isEmpty()) {
             recipeAdapter.setRecipes(savedRecipes);
+
+//            // Handle recipe clicks
+//            recipeAdapter.setOnRecipeImageClickListener(getTitle -> {
+//                // Navigate to IngredientsActivity and pass ingredients
+//                navigateToIngredientsActivity(getTitle);
+//            });
+
         } else {
             Toast.makeText(this, "No saved recipes found.", Toast.LENGTH_SHORT).show();
         }
@@ -54,22 +60,31 @@ public class SavedRecipesActivity extends AppCompatActivity {
 
     }
 
-    private List<Recipe> loadSavedRecipes(String userId) {
-        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes_" + userId, MODE_PRIVATE);
+    private List<Recipe> loadSavedRecipes() {
+        SharedPreferences sharedPreferences = getSharedPreferences("SavedRecipes", MODE_PRIVATE);
         Map<String, ?> savedRecipesMap = sharedPreferences.getAll();
 
         List<Recipe> recipes = new ArrayList<>();
         for (Map.Entry<String, ?> entry : savedRecipesMap.entrySet()) {
-            String title = entry.getKey();
-            String imageUrl = (String) entry.getValue();
+            String key = entry.getKey();
 
-            Recipe recipe = new Recipe();
-            recipe.setTitle(title);
-            recipe.setImageUrl(imageUrl);
+//            String title = entry.getKey();
+//            String imageUrl = (String) entry.getValue();
 
-            recipes.add(recipe);
+            // Filter for recipe titles (avoid loading "_imageUrl" or "_ingredients" keys)
+            if (key.endsWith("_imageUrl")) {
+                String title = key.replace("_imageUrl", "");
+                String imageUrl = (String) entry.getValue();
+
+                Recipe recipe = new Recipe();
+                recipe.setTitle(title);
+                recipe.setImageUrl(imageUrl);
+
+                recipes.add(recipe);
+            }
+
         }
         return recipes;
-
     }
+
 }

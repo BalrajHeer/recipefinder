@@ -19,7 +19,7 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
     private List<Recipe> recipes = new ArrayList<>();
     private OnRecipeImageClickListener listener;
-    private Context context;
+    private final Context context;
 
     // Constructor
     public RecipeAdapter(Context context) {
